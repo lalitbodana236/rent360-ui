@@ -1,34 +1,79 @@
-<aside class="bg-primary text-white h-screen flex flex-col transition-all duration-300" [class.w-64]="!collapsed" [class.w-20]="collapsed">
-  <div class="px-4 py-4 border-b border-white/10" *ngIf="!collapsed">
-    <div class="text-xl font-bold">Rent360</div>
+<aside class="h-screen border-r border-gray-200 bg-white text-gray-700 transition-all duration-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100" [class.w-64]="!collapsed" [class.w-20]="collapsed">
+  <div class="border-b border-gray-200 px-4 py-4 dark:border-gray-700" *ngIf="!collapsed">
+    <div class="text-xl font-bold text-gray-900 dark:text-gray-100">Rent360</div>
+  </div>
+
+  <div class="border-b border-gray-200 py-4 text-center dark:border-gray-700" *ngIf="collapsed">
+    <div class="mx-auto grid h-9 w-9 place-items-center rounded-full bg-primary/10 text-sm font-bold text-primary">R</div>
   </div>
 
   <nav class="flex-1 overflow-y-auto px-2 py-4 space-y-1">
     <ng-container *ngFor="let item of items">
       <a
         [routerLink]="item.route"
-        routerLinkActive="bg-white/10 border-l-4 border-secondary"
-        class="block rounded-lg px-4 py-3 text-sm font-medium transition-all"
+        routerLinkActive="bg-indigo-50 text-primary dark:bg-indigo-500/20 dark:text-indigo-200"
+        class="group relative flex items-center rounded-lg px-3 py-3 text-sm font-medium transition-all hover:bg-gray-100 dark:hover:bg-gray-800"
+        [class.justify-center]="collapsed"
       >
-        <span *ngIf="!collapsed">{{ item.label }}</span>
+        <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 fill-none stroke-current" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path [attr.d]="iconPath(item.icon)"></path>
+        </svg>
+
+        <span *ngIf="!collapsed" class="ml-3">{{ item.label }}</span>
+
+        <button
+          *ngIf="item.label === 'Payments' && !collapsed"
+          type="button"
+          class="ml-auto rounded p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
+          (click)="$event.preventDefault(); togglePayments()"
+          aria-label="Toggle payments submenu"
+        >
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-none stroke-current transition-transform" stroke-width="2" [class.rotate-90]="paymentsExpanded">
+            <path d="m9 6 6 6-6 6"></path>
+          </svg>
+        </button>
+
+        <span *ngIf="collapsed" class="pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs font-semibold text-white opacity-0 shadow-md transition group-hover:opacity-100 dark:bg-gray-700">
+          {{ item.label }}
+        </span>
       </a>
 
-      <div *ngIf="item.label === 'Payments' && item.children && paymentsExpanded && !collapsed" class="ml-4 mb-2 space-y-1">
-        <a *ngFor="let child of item.children"
-           [routerLink]="child.route"
-           class="block rounded-lg px-3 py-2 text-xs text-blue-100 hover:bg-white/10">
+      <div *ngIf="item.label === 'Payments' && item.children && paymentsExpanded && !collapsed" class="ml-8 mb-2 space-y-1">
+        <a *ngFor="let child of item.children" [routerLink]="child.route" class="block rounded-lg px-3 py-2 text-xs text-gray-500 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
           {{ child.label }}
         </a>
       </div>
     </ng-container>
   </nav>
 
-  <div class="p-3 border-t border-white/10" *ngIf="user$ | async as user">
-    <div class="rounded-xl bg-white/10 p-3" *ngIf="!collapsed">
-      <div class="font-semibold text-sm">{{ user.fullName }}</div>
-      <div class="text-xs text-blue-100">{{ user.email }}</div>
+  <div class="border-t border-gray-200 p-3 dark:border-gray-700" *ngIf="user$ | async as user">
+    <div class="rounded-xl bg-gray-100 p-3 dark:bg-gray-800" *ngIf="!collapsed">
+      <div class="font-semibold text-sm text-gray-900 dark:text-gray-100">{{ user.fullName }}</div>
+      <div class="text-xs text-gray-500 dark:text-gray-300">{{ user.email }}</div>
     </div>
-    <button type="button" class="mt-3 w-full rounded-lg bg-white text-primary px-3 py-2 text-sm font-semibold" (click)="logout()" *ngIf="!collapsed">
+
+    <div *ngIf="collapsed" class="group relative flex justify-center">
+      <button
+        type="button"
+        class="grid h-10 w-10 place-items-center rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800"
+        (click)="logout()"
+        aria-label="Logout"
+      >
+        <svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path [attr.d]="iconPath('logout')"></path>
+        </svg>
+      </button>
+      <span class="pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs font-semibold text-white opacity-0 shadow-md transition group-hover:opacity-100 dark:bg-gray-700">
+        Logout
+      </span>
+    </div>
+
+    <button
+      type="button"
+      class="mt-3 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800"
+      (click)="logout()"
+      *ngIf="!collapsed"
+    >
       Logout
     </button>
   </div>
