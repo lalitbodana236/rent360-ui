@@ -1,5 +1,5 @@
 <div class="r360-page">
-  <r360-page-header title="Properties & Units" subtitle="Detailed property intelligence with media, utilities, parking and unit configuration"></r360-page-header>
+  <r360-page-header title="Properties & Units" subtitle="Property-wise listing with unit details, media, utilities and parking"></r360-page-header>
 
   <section class="r360-section grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
     <r360-card>
@@ -89,6 +89,8 @@
             <option value="inactive">Inactive</option>
           </select>
         </label>
+
+        <div *ngIf="propertyFormError" class="sm:col-span-2 text-sm text-danger">{{ propertyFormError }}</div>
 
         <div class="sm:col-span-2 flex flex-wrap gap-2 pt-2">
           <button class="r360-btn-primary" type="submit" [disabled]="formSubmitting">{{ editPropertyMode ? 'Update' : 'Create' }}</button>
@@ -192,6 +194,8 @@
           <input class="r360-input mt-1" type="text" formControlName="videoUrl" placeholder="https://...mp4" />
         </label>
 
+        <div *ngIf="unitFormError" class="xl:col-span-3 text-sm text-danger">{{ unitFormError }}</div>
+
         <div class="xl:col-span-3 flex flex-wrap gap-2 pt-2">
           <button class="r360-btn-primary" type="submit" [disabled]="formSubmitting">{{ editUnitMode ? 'Update Unit' : 'Create Unit' }}</button>
           <button class="r360-btn-secondary" type="button" (click)="cancelUnitForm()">Cancel</button>
@@ -246,75 +250,85 @@
   </section>
 
   <section class="r360-section">
-    <r360-card>
-      <div class="mb-4 flex items-center justify-between">
-        <h3 class="text-xl font-semibold">Properties & Units</h3>
-        <span class="text-xs text-gray-500">{{ filteredRows.length }} rows</span>
-      </div>
+    <div class="space-y-4" *ngIf="filteredProperties.length; else noPropertyData">
+      <r360-card *ngFor="let property of filteredProperties">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ property.name }}</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-300">{{ property.address }} • {{ property.city }}</p>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Owner: {{ property.ownerName }}</p>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ property.description }}</p>
+          </div>
 
-      <div class="r360-table-wrap">
-        <table class="r360-table">
-          <thead>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-              <th class="r360-th">Property</th>
-              <th class="r360-th">City</th>
-              <th class="r360-th">Unit</th>
-              <th class="r360-th">BHK</th>
-              <th class="r360-th">Furnishing</th>
-              <th class="r360-th">Rent</th>
-              <th class="r360-th">Carpet</th>
-              <th class="r360-th">Parking</th>
-              <th class="r360-th">Utilities</th>
-              <th class="r360-th">Media</th>
-              <th class="r360-th">Status</th>
-              <th class="r360-th">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="r360-row" *ngFor="let row of filteredRows">
-              <td class="r360-td font-semibold text-gray-900 dark:text-gray-100">{{ row.propertyName }}</td>
-              <td class="r360-td">{{ row.city }}</td>
-              <td class="r360-td">{{ row.unit?.unitCode || '-' }}</td>
-              <td class="r360-td">{{ row.unit?.configuration || '-' }}</td>
-              <td class="r360-td">{{ row.unit?.furnishing || '-' }}</td>
-              <td class="r360-td">{{ row.unit ? (row.unit.rent | appCurrency) : '-' }}</td>
-              <td class="r360-td">{{ row.unit?.carpetAreaSqFt ? (row.unit?.carpetAreaSqFt + ' sq.ft') : '-' }}</td>
-              <td class="r360-td">{{ row.unit ? (row.unit.parking.twoWheelerSlots + ' / ' + row.unit.parking.fourWheelerSlots) : '-' }}</td>
-              <td class="r360-td">{{ row.unit ? (row.unit.utilities.electricityProvider + ' • ' + row.unit.utilities.gasLine) : '-' }}</td>
-              <td class="r360-td">{{ row.unit?.media?.length || 0 }}</td>
-              <td class="r360-td"><r360-status-badge [value]="row.unit?.occupancyStatus || row.propertyStatus"></r360-status-badge></td>
-              <td class="r360-td">
-                <div class="relative inline-block text-left" (click)="$event.stopPropagation()">
-                  <button
-                    type="button"
-                    class="r360-icon-btn"
-                    (click)="toggleActionMenu($event, row)"
-                    aria-label="More actions"
-                  >
-                    <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
-                      <circle cx="12" cy="5" r="1.8"></circle>
-                      <circle cx="12" cy="12" r="1.8"></circle>
-                      <circle cx="12" cy="19" r="1.8"></circle>
-                    </svg>
-                  </button>
+          <div class="flex items-center gap-2" *ngIf="canEdit">
+            <button class="r360-btn-secondary" type="button" (click)="openEditProperty(property)">Edit Property</button>
+            <button class="r360-btn-primary" type="button" (click)="openCreateUnit(property.id)">Add Unit</button>
+          </div>
+        </div>
 
-                  <div
-                    *ngIf="isActionMenuOpen(row)"
-                    class="r360-menu"
-                  >
-                    <button class="r360-menu-item" type="button" (click)="viewRowDetails(row)">View</button>
-                    <button class="r360-menu-item" type="button" *ngIf="canEdit" (click)="editPropertyFromRow(row.propertyId)">Edit Property</button>
-                    <button class="r360-menu-item" type="button" *ngIf="canEdit && row.unit" (click)="openEditUnit(row)">Edit Unit</button>
-                    <button class="r360-menu-item" type="button" *ngIf="canEdit && !row.unit" (click)="openCreateUnit(row.propertyId)">Add Unit</button>
+        <div class="r360-table-wrap">
+          <table class="r360-table">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="r360-th">Unit</th>
+                <th class="r360-th">BHK</th>
+                <th class="r360-th">Furnishing</th>
+                <th class="r360-th">Rent</th>
+                <th class="r360-th">Carpet</th>
+                <th class="r360-th">Parking</th>
+                <th class="r360-th">Utilities</th>
+                <th class="r360-th">Media</th>
+                <th class="r360-th">Status</th>
+                <th class="r360-th">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="!property.units.length" class="r360-row">
+                <td class="r360-td" colspan="10">No units found for this property.</td>
+              </tr>
+
+              <tr class="r360-row" *ngFor="let unit of property.units">
+                <td class="r360-td">{{ unit.unitCode }}</td>
+                <td class="r360-td">{{ unit.configuration }}</td>
+                <td class="r360-td">{{ unit.furnishing }}</td>
+                <td class="r360-td">{{ unit.rent | appCurrency }}</td>
+                <td class="r360-td">{{ unit.carpetAreaSqFt }} sq.ft</td>
+                <td class="r360-td">{{ unit.parking.twoWheelerSlots }} / {{ unit.parking.fourWheelerSlots }}</td>
+                <td class="r360-td">{{ unit.utilities.electricityProvider }} • {{ unit.utilities.gasLine }}</td>
+                <td class="r360-td">{{ unit.media.length }}</td>
+                <td class="r360-td"><r360-status-badge [value]="unit.occupancyStatus"></r360-status-badge></td>
+                <td class="r360-td">
+                  <div class="relative inline-block text-left" (click)="$event.stopPropagation()">
+                    <button
+                      type="button"
+                      class="r360-icon-btn"
+                      (click)="toggleActionMenu($event, property.id, unit.id)"
+                      aria-label="More actions"
+                    >
+                      <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+                        <circle cx="12" cy="5" r="1.8"></circle>
+                        <circle cx="12" cy="12" r="1.8"></circle>
+                        <circle cx="12" cy="19" r="1.8"></circle>
+                      </svg>
+                    </button>
+
+                    <div *ngIf="isActionMenuOpen(property.id, unit.id)" class="r360-menu">
+                      <button class="r360-menu-item" type="button" (click)="viewPropertyUnitDetails(property, unit)">View</button>
+                      <button class="r360-menu-item" type="button" *ngIf="canEdit" (click)="openEditUnit(property, unit)">Edit Unit</button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </r360-card>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </r360-card>
+    </div>
+
+    <ng-template #noPropertyData>
+      <r360-card>
+        <p class="text-sm text-gray-500">No property records match your filters.</p>
+      </r360-card>
+    </ng-template>
   </section>
 </div>
-
-

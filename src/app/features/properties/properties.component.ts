@@ -32,7 +32,7 @@ interface UnitTableRow {
 })
 export class PropertiesComponent implements OnInit {
   properties: PropertyRecord[] = [];
-  filteredRows: UnitTableRow[] = [];
+  filteredProperties: PropertyRecord[] = [];
 
   search = '';
   selectedProperty = 'All';
@@ -46,6 +46,8 @@ export class PropertiesComponent implements OnInit {
   editingUnitId = '';
   selectedRow: UnitTableRow | null = null;
   formSubmitting = false;
+  propertyFormError = '';
+  unitFormError = '';
   openActionMenuId: string | null = null;
 
   readonly bhkOptions: BHKType[] = ['studio', '1BHK', '2BHK', '3BHK', '4BHK', '5BHK+'];
@@ -135,18 +137,18 @@ export class PropertiesComponent implements OnInit {
     this.applyFilters();
   }
 
-  rowMenuId(row: UnitTableRow): string {
-    return `${row.propertyId}-${row.unit?.id ?? 'no-unit'}`;
+  rowMenuId(propertyId: string, unitId?: string): string {
+    return `${propertyId}-${unitId ?? 'no-unit'}`;
   }
 
-  toggleActionMenu(event: MouseEvent, row: UnitTableRow): void {
+  toggleActionMenu(event: MouseEvent, propertyId: string, unitId?: string): void {
     event.stopPropagation();
-    const key = this.rowMenuId(row);
+    const key = this.rowMenuId(propertyId, unitId);
     this.openActionMenuId = this.openActionMenuId === key ? null : key;
   }
 
-  isActionMenuOpen(row: UnitTableRow): boolean {
-    return this.openActionMenuId === this.rowMenuId(row);
+  isActionMenuOpen(propertyId: string, unitId?: string): boolean {
+    return this.openActionMenuId === this.rowMenuId(propertyId, unitId);
   }
 
   closeActionMenu(): void {
@@ -157,7 +159,9 @@ export class PropertiesComponent implements OnInit {
   onDocumentClick(): void {
     this.closeActionMenu();
   }
+
   openCreateProperty(): void {
+    this.propertyFormError = '';
     this.editPropertyMode = false;
     this.editingPropertyId = '';
     this.propertyForm.reset({
@@ -172,6 +176,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   openEditProperty(property: PropertyRecord): void {
+    this.propertyFormError = '';
     this.editPropertyMode = true;
     this.editingPropertyId = property.id;
     this.propertyForm.reset({
@@ -185,14 +190,8 @@ export class PropertiesComponent implements OnInit {
     this.showPropertyForm = true;
   }
 
-  editPropertyFromRow(propertyId: string): void {
-    const record = this.properties.find((item) => item.id === propertyId);
-    if (record) {
-      this.openEditProperty(record);
-    }
-  }
-
   openCreateUnit(propertyId: string): void {
+    this.unitFormError = '';
     this.editUnitMode = false;
     this.editingUnitId = '';
     this.unitForm.reset({
@@ -216,39 +215,46 @@ export class PropertiesComponent implements OnInit {
     this.showUnitForm = true;
   }
 
-  openEditUnit(row: UnitTableRow): void {
-    if (!row.unit) {
-      return;
-    }
-
-    const image = row.unit.media.find((item) => item.type === 'image')?.url ?? '';
-    const video = row.unit.media.find((item) => item.type === 'video')?.url ?? '';
+  openEditUnit(property: PropertyRecord, unit: UnitRecord): void {
+    this.unitFormError = '';
+    const image = unit.media.find((item) => item.type === 'image')?.url ?? '';
+    const video = unit.media.find((item) => item.type === 'video')?.url ?? '';
 
     this.editUnitMode = true;
-    this.editingUnitId = row.unit.id;
+    this.editingUnitId = unit.id;
     this.unitForm.reset({
-      propertyId: row.propertyId,
-      unitCode: row.unit.unitCode,
-      configuration: row.unit.configuration,
-      furnishing: row.unit.furnishing,
-      rent: row.unit.rent,
-      occupancyStatus: row.unit.occupancyStatus,
-      tenantName: row.unit.tenantName,
-      carpetAreaSqFt: row.unit.carpetAreaSqFt,
-      parkingTwoWheeler: row.unit.parking.twoWheelerSlots,
-      parkingFourWheeler: row.unit.parking.fourWheelerSlots,
-      electricityProvider: row.unit.utilities.electricityProvider,
-      meterNumber: row.unit.utilities.meterNumber,
-      gasLine: row.unit.utilities.gasLine,
-      waterSupply: row.unit.utilities.waterSupply,
+      propertyId: property.id,
+      unitCode: unit.unitCode,
+      configuration: unit.configuration,
+      furnishing: unit.furnishing,
+      rent: unit.rent,
+      occupancyStatus: unit.occupancyStatus,
+      tenantName: unit.tenantName,
+      carpetAreaSqFt: unit.carpetAreaSqFt,
+      parkingTwoWheeler: unit.parking.twoWheelerSlots,
+      parkingFourWheeler: unit.parking.fourWheelerSlots,
+      electricityProvider: unit.utilities.electricityProvider,
+      meterNumber: unit.utilities.meterNumber,
+      gasLine: unit.utilities.gasLine,
+      waterSupply: unit.utilities.waterSupply,
       imageUrl: image,
       videoUrl: video,
     });
     this.showUnitForm = true;
   }
 
-  viewRowDetails(row: UnitTableRow): void {
-    this.selectedRow = row;
+  viewPropertyUnitDetails(property: PropertyRecord, unit?: UnitRecord): void {
+    this.closeActionMenu();
+    this.selectedRow = {
+      propertyId: property.id,
+      propertyName: property.name,
+      propertyStatus: property.status,
+      city: property.city,
+      address: property.address,
+      description: property.description,
+      ownerName: property.ownerName,
+      unit,
+    };
   }
 
   closeDetails(): void {
@@ -257,11 +263,13 @@ export class PropertiesComponent implements OnInit {
 
   cancelPropertyForm(): void {
     this.showPropertyForm = false;
+    this.propertyFormError = '';
     this.formSubmitting = false;
   }
 
   cancelUnitForm(): void {
     this.showUnitForm = false;
+    this.unitFormError = '';
     this.formSubmitting = false;
   }
 
@@ -271,6 +279,7 @@ export class PropertiesComponent implements OnInit {
       return;
     }
 
+    this.propertyFormError = '';
     const payload = this.propertyForm.getRawValue() as PropertyCreatePayload;
     this.formSubmitting = true;
 
@@ -287,8 +296,9 @@ export class PropertiesComponent implements OnInit {
         this.showPropertyForm = false;
         this.applyFilters();
       },
-      error: () => {
+      error: (error: unknown) => {
         this.formSubmitting = false;
+        this.propertyFormError = error instanceof Error ? error.message : 'Failed to save property.';
       },
     });
   }
@@ -299,6 +309,7 @@ export class PropertiesComponent implements OnInit {
       return;
     }
 
+    this.unitFormError = '';
     const raw = this.unitForm.getRawValue();
     const imageUrl = (raw.imageUrl ?? '').trim();
     const videoUrl = (raw.videoUrl ?? '').trim();
@@ -348,8 +359,9 @@ export class PropertiesComponent implements OnInit {
         this.showUnitForm = false;
         this.applyFilters();
       },
-      error: () => {
+      error: (error: unknown) => {
         this.formSubmitting = false;
+        this.unitFormError = error instanceof Error ? error.message : 'Failed to save unit.';
       },
     });
   }
@@ -357,63 +369,55 @@ export class PropertiesComponent implements OnInit {
   private applyFilters(): void {
     const searchKey = this.search.trim().toLowerCase();
 
-    this.filteredRows = this.properties
+    this.filteredProperties = this.properties
       .filter((property) =>
         this.selectedProperty === 'All' ? true : property.name === this.selectedProperty,
       )
       .filter((property) =>
         this.selectedStatus === 'All' ? true : property.status === this.selectedStatus,
       )
-      .flatMap((property): UnitTableRow[] => {
-        if (!property.units.length) {
-          return [
-            {
-              propertyId: property.id,
-              propertyName: property.name,
-              propertyStatus: property.status,
-              city: property.city,
-              address: property.address,
-              description: property.description,
-              ownerName: property.ownerName,
-              unit: undefined,
-            },
-          ];
-        }
-
-        return property.units.map((unit): UnitTableRow => ({
-          propertyId: property.id,
-          propertyName: property.name,
-          propertyStatus: property.status,
-          city: property.city,
-          address: property.address,
-          description: property.description,
-          ownerName: property.ownerName,
-          unit,
-        }));
-      })
-      .filter((row) => {
+      .map((property) => {
         if (!searchKey) {
-          return true;
+          return property;
         }
 
-        const text = [
-          row.propertyName,
-          row.city,
-          row.address,
-          row.ownerName,
-          row.unit?.unitCode ?? '',
-          row.unit?.configuration ?? '',
-          row.unit?.furnishing ?? '',
-          row.unit?.tenantName ?? '',
-          row.unit?.utilities.electricityProvider ?? '',
-          row.unit?.utilities.meterNumber ?? '',
+        const propertyText = [
+          property.name,
+          property.city,
+          property.address,
+          property.description,
+          property.ownerName,
         ]
           .join(' ')
           .toLowerCase();
 
-        return text.includes(searchKey);
-      });
+        if (propertyText.includes(searchKey)) {
+          return property;
+        }
+
+        const matchedUnits = property.units.filter((unit) => {
+          const unitText = [
+            unit.unitCode,
+            unit.configuration,
+            unit.furnishing,
+            unit.tenantName,
+            unit.utilities.electricityProvider,
+            unit.utilities.meterNumber,
+          ]
+            .join(' ')
+            .toLowerCase();
+
+          return unitText.includes(searchKey);
+        });
+
+        return { ...property, units: matchedUnits };
+      })
+      .filter((property) => property.units.length > 0 || this.search.trim() === '' || [
+        property.name,
+        property.city,
+        property.address,
+        property.description,
+        property.ownerName,
+      ].join(' ').toLowerCase().includes(searchKey));
   }
 }
-
-

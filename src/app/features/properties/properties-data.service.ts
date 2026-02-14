@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiClientService } from '../../core/services/api-client.service';
@@ -136,6 +136,10 @@ export class PropertiesDataService {
       return this.apiClient.post<PropertyRecord>(API_ENDPOINTS.properties.create, payload);
     }
 
+    if (this.isDuplicateProperty(payload)) {
+      return throwError(() => new Error('Property already exists with same name and address.'));
+    }
+
     const created: PropertyRecord = {
       id: this.makeId('prop'),
       name: payload.name.trim(),
@@ -156,7 +160,11 @@ export class PropertiesDataService {
 
   updateProperty(payload: PropertyUpdatePayload): Observable<PropertyRecord> {
     if (!environment.api.useMockApi) {
-      return this.apiClient.put<PropertyRecord>(`properties/${payload.id}`, payload);
+      return this.apiClient.put<PropertyRecord>(API_ENDPOINTS.properties.update(payload.id), payload);
+    }
+
+    if (this.isDuplicateProperty(payload, payload.id)) {
+      return throwError(() => new Error('Another property already exists with same name and address.'));
     }
 
     let updated: PropertyRecord | undefined;
@@ -179,7 +187,7 @@ export class PropertiesDataService {
     });
 
     if (updated === undefined) {
-      throw new Error('Property not found for update.');
+      return throwError(() => new Error('Property not found for update.'));
     }
 
     this.state$.next(next);
@@ -192,11 +200,23 @@ export class PropertiesDataService {
     if (!environment.api.useMockApi) {
       if (payload.id) {
         return this.apiClient.put<UnitRecord>(
-          `properties/${payload.propertyId}/units/${payload.id}`,
+          API_ENDPOINTS.properties.updateUnit(payload.propertyId, payload.id),
           payload,
         );
       }
-      return this.apiClient.post<UnitRecord>(`properties/${payload.propertyId}/units`, payload);
+      return this.apiClient.post<UnitRecord>(
+        API_ENDPOINTS.properties.createUnit(payload.propertyId),
+        payload,
+      );
+    }
+
+    const property = this.state$.value.find((item) => item.id === payload.propertyId);
+    if (!property) {
+      return throwError(() => new Error('Property not found for unit operation.'));
+    }
+
+    if (this.isDuplicateUnitCode(property, payload.unitCode, payload.id)) {
+      return throwError(() => new Error('Unit code already exists in this property.'));
     }
 
     const normalizedMedia = payload.media
@@ -226,31 +246,63 @@ export class PropertiesDataService {
       media: normalizedMedia,
     };
 
-    let foundProperty = false;
-    const next = this.state$.value.map((property) => {
-      if (property.id !== payload.propertyId) {
-        return property;
+    const next = this.state$.value.map((currentProperty) => {
+      if (currentProperty.id !== payload.propertyId) {
+        return currentProperty;
       }
 
-      foundProperty = true;
-      const existingIndex = property.units.findIndex((unit) => unit.id === normalizedUnit.id);
+      const existingIndex = currentProperty.units.findIndex(
+        (unit) => unit.id === normalizedUnit.id,
+      );
+
       if (existingIndex === -1) {
-        return { ...property, units: [...property.units, normalizedUnit] };
+        return { ...currentProperty, units: [...currentProperty.units, normalizedUnit] };
       }
 
-      const units = [...property.units];
+      const units = [...currentProperty.units];
       units[existingIndex] = normalizedUnit;
-      return { ...property, units };
+      return { ...currentProperty, units };
     });
-
-    if (!foundProperty) {
-      throw new Error('Property not found for unit operation.');
-    }
 
     this.state$.next(next);
     this.writeMockStore(next);
     this.refresh.notifyPropertiesChanged();
     return of(normalizedUnit);
+  }
+
+  private isDuplicateProperty(payload: PropertyCreatePayload, ignoreId = ''): boolean {
+    const nameKey = this.norm(payload.name);
+    const cityKey = this.norm(payload.city);
+    const addressKey = this.norm(payload.address);
+
+    return this.state$.value.some((item) => {
+      if (ignoreId && item.id === ignoreId) {
+        return false;
+      }
+      return (
+        this.norm(item.name) === nameKey &&
+        this.norm(item.city) === cityKey &&
+        this.norm(item.address) === addressKey
+      );
+    });
+  }
+
+  private isDuplicateUnitCode(
+    property: PropertyRecord,
+    unitCode: string,
+    ignoreUnitId = '',
+  ): boolean {
+    const codeKey = this.norm(unitCode);
+    return property.units.some((item) => {
+      if (ignoreUnitId && item.id === ignoreUnitId) {
+        return false;
+      }
+      return this.norm(item.unitCode) === codeKey;
+    });
+  }
+
+  private norm(value: string): string {
+    return (value ?? '').trim().toLowerCase();
   }
 
   private normalizeProperties(rows: PropertyRecord[]): PropertyRecord[] {
@@ -320,4 +372,3 @@ export class PropertiesDataService {
     }
   }
 }
-
