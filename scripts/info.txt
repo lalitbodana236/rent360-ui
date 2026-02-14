@@ -1,0 +1,11 @@
+
+del .\package-lock.json  
+del .\.angular 
+del .\node_modules
+npm cache clean --force
+npm cache verify
+
+
+/***build deploy****/
+npm start
+npm run deploy:gh

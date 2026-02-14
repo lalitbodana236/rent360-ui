@@ -4,7 +4,7 @@ export const environment = {
     appName: 'Rent360',
   },
   api: {
-    useMockApi: false,
+    useMockApi: true,
     apiBaseUrl: 'https://api.example.com',
     mockApiBaseUrl: 'assets/mock-api',
   },
