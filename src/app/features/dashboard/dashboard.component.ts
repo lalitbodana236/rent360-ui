@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   DashboardDataService,
   DashboardOverview,
@@ -10,17 +10,20 @@ import {
   PlatformInsight,
   PlatformInsightsService,
 } from '../../core/services/platform-insights.service';
+import { DataRefreshService } from '../../core/services/data-refresh.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   data: DashboardOverview | null = null;
   insights: PlatformInsight[] = [];
   userName = 'User';
   private baseData: DashboardOverview | null = null;
+  private readonly subscriptions = new Subscription();
 
   availablePersonas: DashboardPersona[] = [];
   selectedPersona: DashboardPersona = 'owner';
@@ -49,15 +52,28 @@ export class DashboardComponent implements OnInit {
     private readonly settings: UserSettingsService,
     private readonly auth: AuthService,
     private readonly platformInsights: PlatformInsightsService,
+    private readonly refresh: DataRefreshService,
   ) {}
 
   ngOnInit(): void {
-    this.settings.userSettings$.subscribe((user) => {
-      this.userName = user.fullName;
-    });
+    this.subscriptions.add(
+      this.settings.userSettings$.subscribe((user) => {
+        this.userName = user.fullName;
+      }),
+    );
 
     this.initializePersonas();
     this.loadPersona(this.selectedPersona);
+
+    this.subscriptions.add(
+      this.refresh.propertiesChanged$.subscribe(() => {
+        this.loadPersona(this.selectedPersona);
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   get viewLabel(): string {

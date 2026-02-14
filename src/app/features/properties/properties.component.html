@@ -1,0 +1,132 @@
+<div class="r360-page">
+  <r360-page-header title="Properties & Units" subtitle="Configurable module backed by mock JSON or real backend"></r360-page-header>
+
+  <section class="r360-section grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <r360-card>
+      <div class="text-xs uppercase tracking-wide text-gray-500">Total Properties</div>
+      <div class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ totalProperties }}</div>
+    </r360-card>
+    <r360-card>
+      <div class="text-xs uppercase tracking-wide text-gray-500">Total Units</div>
+      <div class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ totalUnits }}</div>
+    </r360-card>
+    <r360-card>
+      <div class="text-xs uppercase tracking-wide text-gray-500">Occupied Units</div>
+      <div class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ occupiedUnits }}</div>
+    </r360-card>
+    <r360-card>
+      <div class="text-xs uppercase tracking-wide text-gray-500">Vacant Units</div>
+      <div class="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ vacantUnits }}</div>
+    </r360-card>
+  </section>
+
+  <section class="r360-section">
+    <r360-card>
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:min-w-[620px] lg:flex-1">
+          <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+            Search
+            <input class="r360-input mt-1" type="text" [value]="search" (input)="onSearch($any($event.target).value)" placeholder="Property, city, unit, tenant" />
+          </label>
+
+          <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+            Property
+            <select class="r360-input mt-1" [value]="selectedProperty" (change)="onPropertyFilter($any($event.target).value)">
+              <option *ngFor="let option of propertyOptions" [value]="option">{{ option }}</option>
+            </select>
+          </label>
+
+          <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+            Status
+            <select class="r360-input mt-1" [value]="selectedStatus" (change)="onStatusFilter($any($event.target).value)">
+              <option value="All">All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </label>
+        </div>
+
+        <button class="r360-btn-primary" type="button" (click)="openCreate()">Add Property</button>
+      </div>
+    </r360-card>
+  </section>
+
+  <section class="r360-section" *ngIf="showForm">
+    <r360-card>
+      <div class="mb-4 text-lg font-semibold">{{ editMode ? 'Update Property' : 'Create Property' }}</div>
+      <form class="grid grid-cols-1 gap-3 sm:grid-cols-2" (ngSubmit)="submit()" [formGroup]="form">
+        <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+          Property Name
+          <input class="r360-input mt-1" type="text" formControlName="name" placeholder="e.g. Palm Residency" />
+        </label>
+
+        <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+          City
+          <input class="r360-input mt-1" type="text" formControlName="city" placeholder="e.g. Austin" />
+        </label>
+
+        <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+          Owner
+          <input class="r360-input mt-1" type="text" formControlName="ownerName" placeholder="Owner full name" />
+        </label>
+
+        <label class="text-xs font-medium text-gray-500 dark:text-gray-300">
+          Status
+          <select class="r360-input mt-1" formControlName="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </label>
+
+        <div class="sm:col-span-2 flex flex-wrap gap-2 pt-2">
+          <button class="r360-btn-primary" type="submit" [disabled]="formSubmitting">{{ editMode ? 'Update' : 'Create' }}</button>
+          <button class="r360-btn-secondary" type="button" (click)="cancelForm()">Cancel</button>
+        </div>
+      </form>
+    </r360-card>
+  </section>
+
+  <section class="r360-section">
+    <r360-card>
+      <div class="mb-4 flex items-center justify-between">
+        <h3 class="text-xl font-semibold">Properties & Units</h3>
+        <span class="text-xs text-gray-500">{{ filteredRows.length }} rows</span>
+      </div>
+
+      <div class="r360-table-wrap">
+        <table class="r360-table">
+          <thead>
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+              <th class="r360-th">Property</th>
+              <th class="r360-th">City</th>
+              <th class="r360-th">Owner</th>
+              <th class="r360-th">Unit</th>
+              <th class="r360-th">Type</th>
+              <th class="r360-th">Rent</th>
+              <th class="r360-th">Occupancy</th>
+              <th class="r360-th">Tenant</th>
+              <th class="r360-th">Property Status</th>
+              <th class="r360-th">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="r360-row" *ngFor="let row of filteredRows">
+              <td class="r360-td font-semibold text-gray-900 dark:text-gray-100">{{ row.propertyName }}</td>
+              <td class="r360-td">{{ row.city }}</td>
+              <td class="r360-td">{{ row.ownerName }}</td>
+              <td class="r360-td">{{ row.unit?.unitCode || '-' }}</td>
+              <td class="r360-td">{{ row.unit?.type || '-' }}</td>
+              <td class="r360-td">{{ row.unit ? (row.unit.rent | appCurrency) : '-' }}</td>
+              <td class="r360-td"><r360-status-badge [value]="row.unit?.occupancyStatus || '-' "></r360-status-badge></td>
+              <td class="r360-td">{{ row.unit?.tenantName || '-' }}</td>
+              <td class="r360-td"><r360-status-badge [value]="row.propertyStatus"></r360-status-badge></td>
+              <td class="r360-td">
+                <button class="r360-btn-secondary !py-1.5" type="button" (click)="editFromRow(row.propertyId)">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </r360-card>
+  </section>
+</div>

@@ -1,0 +1,79 @@
+{
+  "properties": [
+    {
+      "id": "prop-001",
+      "name": "Maple Residency",
+      "city": "Austin",
+      "ownerName": "Olivia Owner",
+      "status": "active",
+      "units": [
+        {
+          "id": "unit-001",
+          "unitCode": "A-101",
+          "type": "2BHK",
+          "rent": 1250,
+          "occupancyStatus": "occupied",
+          "tenantName": "Terry Tenant"
+        },
+        {
+          "id": "unit-002",
+          "unitCode": "A-102",
+          "type": "1BHK",
+          "rent": 980,
+          "occupancyStatus": "vacant",
+          "tenantName": ""
+        }
+      ]
+    },
+    {
+      "id": "prop-002",
+      "name": "Riverfront Heights",
+      "city": "Dallas",
+      "ownerName": "Casey Hybrid",
+      "status": "active",
+      "units": [
+        {
+          "id": "unit-003",
+          "unitCode": "B-201",
+          "type": "3BHK",
+          "rent": 1890,
+          "occupancyStatus": "occupied",
+          "tenantName": "Noah Rivera"
+        },
+        {
+          "id": "unit-004",
+          "unitCode": "B-202",
+          "type": "2BHK",
+          "rent": 1490,
+          "occupancyStatus": "maintenance",
+          "tenantName": ""
+        }
+      ]
+    },
+    {
+      "id": "prop-003",
+      "name": "Sunset Towers",
+      "city": "Houston",
+      "ownerName": "Olivia Owner",
+      "status": "inactive",
+      "units": [
+        {
+          "id": "unit-005",
+          "unitCode": "C-301",
+          "type": "Studio",
+          "rent": 820,
+          "occupancyStatus": "occupied",
+          "tenantName": "Ava Tenant"
+        },
+        {
+          "id": "unit-006",
+          "unitCode": "C-302",
+          "type": "2BHK",
+          "rent": 1320,
+          "occupancyStatus": "vacant",
+          "tenantName": ""
+        }
+      ]
+    }
+  ]
+}

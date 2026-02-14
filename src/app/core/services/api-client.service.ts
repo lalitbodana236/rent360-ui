@@ -23,6 +23,11 @@ export class ApiClientService {
     return this.http.post<T>(url, body);
   }
 
+  put<T>(endpoint: string, body: unknown): Observable<T> {
+    const url = this.resolveApiUrl(endpoint);
+    return this.http.put<T>(url, body);
+  }
+
   private resolveUrl(options: ApiRequestOptions): string {
     if (environment.api.useMockApi) {
       return this.resolveMockUrl(options.mockPath);
@@ -55,3 +60,4 @@ export class ApiClientService {
     return httpParams;
   }
 }
+
