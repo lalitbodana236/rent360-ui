@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { PERMISSIONS } from '../../core/constants/permissions';
 import { AuthService } from '../../core/services/auth.service';
+import { AuthorizationService } from '../../core/services/authorization.service';
 import {
   PropertiesDataService,
   PropertyRecord,
@@ -39,6 +41,7 @@ export class TenantsComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly auth: AuthService,
+    private readonly authorization: AuthorizationService,
     private readonly propertiesData: PropertiesDataService,
   ) {}
 
@@ -89,7 +92,11 @@ export class TenantsComponent implements OnInit, OnDestroy {
   }
 
   get canManageTenantActions(): boolean {
-    return this.isAdmin || this.isOwner || this.isSocietyAdmin;
+    return this.authorization.canWrite(PERMISSIONS.tenantsWrite);
+  }
+
+  get canViewTenantActions(): boolean {
+    return this.authorization.canView(PERMISSIONS.tenantsView);
   }
 
   onSearch(value: string): void {

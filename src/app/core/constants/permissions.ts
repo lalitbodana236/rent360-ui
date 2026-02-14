@@ -6,6 +6,7 @@ export const PERMISSIONS = {
   propertiesView: 'properties.view',
   propertiesWrite: 'properties.write',
   tenantsView: 'tenants.view',
+  tenantsWrite: 'tenants.write',
   societyView: 'society.view',
   societyWrite: 'society.write',
   communicationsView: 'communications.view',

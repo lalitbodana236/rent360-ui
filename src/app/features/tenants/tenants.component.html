@@ -117,9 +117,10 @@
                 </span>
               </td>
               <td class="r360-td">
-                <button class="r360-btn-secondary" type="button" (click)="openTenant(row)">
+                <button class="r360-btn-secondary" *ngIf="canViewTenantActions" type="button" (click)="openTenant(row)">
                   {{ canManageTenantActions ? 'Manage' : 'View' }}
                 </button>
+                <span class="text-xs text-gray-500" *ngIf="!canViewTenantActions">No access</span>
               </td>
             </tr>
             <tr class="r360-row" *ngIf="!filteredTenants.length">
