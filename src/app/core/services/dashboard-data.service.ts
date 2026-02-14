@@ -6,6 +6,33 @@ import { ApiClientService } from './api-client.service';
 
 export type DashboardPersona = 'owner' | 'tenant' | 'societyAdmin';
 
+interface DirectoryRow {
+  name: string;
+  role: string;
+  property: string;
+  unit: string;
+  status: string;
+}
+
+interface DefaulterRow {
+  name: string;
+  property: string;
+  unit: string;
+  rentDue: string;
+  maintenanceDue: string;
+  daysLate: number;
+}
+
+interface HistoryRow {
+  name: string;
+  role: string;
+  property: string;
+  unit: string;
+  from: string;
+  to: string;
+  moveOutReason: string;
+}
+
 export interface DashboardOverview {
   role: DashboardPersona;
   kpis: { label: string; value: string }[];
@@ -22,6 +49,14 @@ export interface DashboardOverview {
     status: 'Paid' | 'Late' | 'Due';
     action: string;
   }[];
+  adminView?: {
+    ownerInsights: { label: string; value: string }[];
+    tenantInsights: { label: string; value: string }[];
+    operationsInsights: { label: string; value: string }[];
+    directory: DirectoryRow[];
+    defaulters: DefaulterRow[];
+    history: HistoryRow[];
+  };
 }
 
 @Injectable()

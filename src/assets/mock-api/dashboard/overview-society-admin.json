@@ -6,6 +6,39 @@
     { "label": "Defaulter Accounts", "value": "11" },
     { "label": "Visitor Entries Today", "value": "54" }
   ],
+  "adminView": {
+    "ownerInsights": [
+      { "label": "Total owners", "value": "126" },
+      { "label": "Owners also residing", "value": "39" },
+      { "label": "Multi-home owners", "value": "17" }
+    ],
+    "tenantInsights": [
+      { "label": "Active tenants", "value": "847" },
+      { "label": "Defaulter tenants", "value": "41" },
+      { "label": "Avg delay (days)", "value": "8" }
+    ],
+    "operationsInsights": [
+      { "label": "Open maintenance", "value": "23" },
+      { "label": "Overdue maintenance", "value": "6" },
+      { "label": "Meetings this month", "value": "3" }
+    ],
+    "directory": [
+      { "name": "Olivia Owner", "role": "Owner", "property": "Block A", "unit": "A-101", "status": "Active" },
+      { "name": "Terry Tenant", "role": "Tenant", "property": "Block A", "unit": "A-102", "status": "Late rent" },
+      { "name": "Casey Hybrid", "role": "Owner, Tenant, Admin", "property": "Block B", "unit": "B-203", "status": "Active" },
+      { "name": "Rohan Member", "role": "Society Member", "property": "Block C", "unit": "C-110", "status": "Maintenance due" }
+    ],
+    "defaulters": [
+      { "name": "Terry Tenant", "property": "Block A", "unit": "A-102", "rentDue": "$850", "maintenanceDue": "$95", "daysLate": 14 },
+      { "name": "Ava Tenant", "property": "Block D", "unit": "D-005", "rentDue": "$1120", "maintenanceDue": "$110", "daysLate": 28 },
+      { "name": "Noah Owner", "property": "Block B", "unit": "B-208", "rentDue": "$0", "maintenanceDue": "$145", "daysLate": 19 }
+    ],
+    "history": [
+      { "name": "Emma Owner", "role": "Owner", "property": "Block C", "unit": "C-104", "from": "2021-03", "to": "2024-08", "moveOutReason": "Sold property" },
+      { "name": "Liam Tenant", "role": "Tenant", "property": "Block A", "unit": "A-109", "from": "2022-01", "to": "2025-01", "moveOutReason": "Job transfer" },
+      { "name": "Mia Tenant", "role": "Tenant", "property": "Block B", "unit": "B-111", "from": "2020-11", "to": "2023-12", "moveOutReason": "Family relocation" }
+    ]
+  },
   "collectionHealth": [
     { "label": "Collected", "percent": 79, "tone": "success" },
     { "label": "On Schedule", "percent": 74, "tone": "info" },

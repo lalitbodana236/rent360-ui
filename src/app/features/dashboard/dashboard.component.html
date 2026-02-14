@@ -26,6 +26,132 @@
       </div>
     </section>
 
+    <section class="r360-section" *ngIf="selectedPersona === 'societyAdmin' && vm.adminView">
+      <h3 class="mb-4 text-xl font-semibold">Society Admin Combined View</h3>
+      <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <r360-card>
+          <div class="mb-3 text-sm font-semibold">Owner Insights</div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-sm" *ngFor="let item of vm.adminView.ownerInsights">
+              <span class="text-gray-500 dark:text-gray-300">{{ item.label }}</span>
+              <span class="font-semibold">{{ item.value }}</span>
+            </div>
+          </div>
+        </r360-card>
+
+        <r360-card>
+          <div class="mb-3 text-sm font-semibold">Tenant Insights</div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-sm" *ngFor="let item of vm.adminView.tenantInsights">
+              <span class="text-gray-500 dark:text-gray-300">{{ item.label }}</span>
+              <span class="font-semibold">{{ item.value }}</span>
+            </div>
+          </div>
+        </r360-card>
+
+        <r360-card>
+          <div class="mb-3 text-sm font-semibold">Maintenance & Meetings</div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-sm" *ngFor="let item of vm.adminView.operationsInsights">
+              <span class="text-gray-500 dark:text-gray-300">{{ item.label }}</span>
+              <span class="font-semibold">{{ item.value }}</span>
+            </div>
+          </div>
+        </r360-card>
+      </div>
+
+      <div class="mt-4 grid grid-cols-1 gap-4">
+        <r360-card>
+          <div class="mb-4 flex items-center justify-between">
+            <h4 class="text-lg font-semibold">Owner / Tenant / Member Directory</h4>
+            <span class="text-xs text-gray-500">Status + quick action</span>
+          </div>
+          <r360-table>
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="r360-th">Name</th>
+                <th class="r360-th">Role</th>
+                <th class="r360-th">Property</th>
+                <th class="r360-th">Unit</th>
+                <th class="r360-th">Status</th>
+                <th class="r360-th">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="r360-row" *ngFor="let row of vm.adminView.directory">
+                <td class="r360-td">{{ row.name }}</td>
+                <td class="r360-td">{{ row.role }}</td>
+                <td class="r360-td">{{ row.property }}</td>
+                <td class="r360-td">{{ row.unit }}</td>
+                <td class="r360-td"><r360-status-badge [value]="row.status"></r360-status-badge></td>
+                <td class="r360-td"><button class="r360-btn-secondary">Send msg</button></td>
+              </tr>
+            </tbody>
+          </r360-table>
+        </r360-card>
+
+        <r360-card>
+          <div class="mb-4 flex items-center justify-between">
+            <h4 class="text-lg font-semibold">Rent + Maintenance Defaulters</h4>
+            <span class="text-xs text-gray-500">Not paid amount and late days</span>
+          </div>
+          <r360-table>
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="r360-th">Name</th>
+                <th class="r360-th">Property</th>
+                <th class="r360-th">Unit</th>
+                <th class="r360-th">Rent Due</th>
+                <th class="r360-th">Maintenance Due</th>
+                <th class="r360-th">Days Late</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="r360-row" *ngFor="let row of vm.adminView.defaulters">
+                <td class="r360-td">{{ row.name }}</td>
+                <td class="r360-td">{{ row.property }}</td>
+                <td class="r360-td">{{ row.unit }}</td>
+                <td class="r360-td font-semibold text-danger">{{ row.rentDue }}</td>
+                <td class="r360-td font-semibold text-warning">{{ row.maintenanceDue }}</td>
+                <td class="r360-td">{{ row.daysLate }}</td>
+              </tr>
+            </tbody>
+          </r360-table>
+        </r360-card>
+
+        <r360-card>
+          <div class="mb-4 flex items-center justify-between">
+            <h4 class="text-lg font-semibold">Historical Owner / Tenant Records</h4>
+            <span class="text-xs text-gray-500">Retained in system, not removed</span>
+          </div>
+          <r360-table>
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="r360-th">Name</th>
+                <th class="r360-th">Role</th>
+                <th class="r360-th">Property</th>
+                <th class="r360-th">Unit</th>
+                <th class="r360-th">From</th>
+                <th class="r360-th">To</th>
+                <th class="r360-th">Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="r360-row" *ngFor="let row of vm.adminView.history">
+                <td class="r360-td">{{ row.name }}</td>
+                <td class="r360-td">{{ row.role }}</td>
+                <td class="r360-td">{{ row.property }}</td>
+                <td class="r360-td">{{ row.unit }}</td>
+                <td class="r360-td">{{ row.from }}</td>
+                <td class="r360-td">{{ row.to }}</td>
+                <td class="r360-td">{{ row.moveOutReason }}</td>
+              </tr>
+            </tbody>
+          </r360-table>
+        </r360-card>
+      </div>
+    </section>
+
     <section class="r360-section" *ngIf="insights.length">
       <h3 class="mb-4 text-xl font-semibold">Cross-Module Intelligence</h3>
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
