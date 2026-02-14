@@ -4,6 +4,8 @@
       "id": "prop-001",
       "name": "Maple Residency",
       "city": "Austin",
+      "address": "221 Maple Street, Downtown, Austin, TX",
+      "description": "Premium gated property near metro with club house and security.",
       "ownerName": "Olivia Owner",
       "status": "active",
       "units": [
@@ -11,17 +13,65 @@
           "id": "unit-001",
           "unitCode": "A-101",
           "type": "2BHK",
+          "configuration": "2BHK",
+          "furnishing": "semi-furnished",
           "rent": 1250,
           "occupancyStatus": "occupied",
-          "tenantName": "Terry Tenant"
+          "tenantName": "Terry Tenant",
+          "carpetAreaSqFt": 910,
+          "parking": {
+            "twoWheelerSlots": 1,
+            "fourWheelerSlots": 1
+          },
+          "utilities": {
+            "electricityProvider": "Austin Energy",
+            "meterNumber": "AUS-EL-11234",
+            "gasLine": "yes",
+            "waterSupply": "mixed"
+          },
+          "media": [
+            {
+              "id": "media-001",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=60",
+              "title": "Living Room"
+            },
+            {
+              "id": "media-002",
+              "type": "video",
+              "url": "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+              "title": "Unit Walkthrough"
+            }
+          ]
         },
         {
           "id": "unit-002",
           "unitCode": "A-102",
           "type": "1BHK",
+          "configuration": "1BHK",
+          "furnishing": "unfurnished",
           "rent": 980,
           "occupancyStatus": "vacant",
-          "tenantName": ""
+          "tenantName": "",
+          "carpetAreaSqFt": 640,
+          "parking": {
+            "twoWheelerSlots": 1,
+            "fourWheelerSlots": 0
+          },
+          "utilities": {
+            "electricityProvider": "Austin Energy",
+            "meterNumber": "AUS-EL-11235",
+            "gasLine": "no",
+            "waterSupply": "corporation"
+          },
+          "media": [
+            {
+              "id": "media-003",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=60",
+              "title": "Vacant Unit"
+            }
+          ]
         }
       ]
     },
@@ -29,6 +79,8 @@
       "id": "prop-002",
       "name": "Riverfront Heights",
       "city": "Dallas",
+      "address": "17 Riverfront Avenue, Arts District, Dallas, TX",
+      "description": "High-rise towers with concierge, covered parking and backup power.",
       "ownerName": "Casey Hybrid",
       "status": "active",
       "units": [
@@ -36,17 +88,52 @@
           "id": "unit-003",
           "unitCode": "B-201",
           "type": "3BHK",
+          "configuration": "3BHK",
+          "furnishing": "furnished",
           "rent": 1890,
           "occupancyStatus": "occupied",
-          "tenantName": "Noah Rivera"
+          "tenantName": "Noah Rivera",
+          "carpetAreaSqFt": 1280,
+          "parking": {
+            "twoWheelerSlots": 1,
+            "fourWheelerSlots": 2
+          },
+          "utilities": {
+            "electricityProvider": "TXU Energy",
+            "meterNumber": "DAL-EL-44889",
+            "gasLine": "yes",
+            "waterSupply": "corporation"
+          },
+          "media": [
+            {
+              "id": "media-004",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=60",
+              "title": "Kitchen"
+            }
+          ]
         },
         {
           "id": "unit-004",
           "unitCode": "B-202",
           "type": "2BHK",
+          "configuration": "2BHK",
+          "furnishing": "semi-furnished",
           "rent": 1490,
           "occupancyStatus": "maintenance",
-          "tenantName": ""
+          "tenantName": "",
+          "carpetAreaSqFt": 980,
+          "parking": {
+            "twoWheelerSlots": 1,
+            "fourWheelerSlots": 1
+          },
+          "utilities": {
+            "electricityProvider": "TXU Energy",
+            "meterNumber": "DAL-EL-44890",
+            "gasLine": "yes",
+            "waterSupply": "mixed"
+          },
+          "media": []
         }
       ]
     },
@@ -54,24 +141,54 @@
       "id": "prop-003",
       "name": "Sunset Towers",
       "city": "Houston",
+      "address": "48 Skyline Road, Midtown, Houston, TX",
+      "description": "Affordable tower blocks with community hall and visitor parking.",
       "ownerName": "Olivia Owner",
       "status": "inactive",
       "units": [
         {
           "id": "unit-005",
           "unitCode": "C-301",
-          "type": "Studio",
+          "type": "studio",
+          "configuration": "studio",
+          "furnishing": "furnished",
           "rent": 820,
           "occupancyStatus": "occupied",
-          "tenantName": "Ava Tenant"
+          "tenantName": "Ava Tenant",
+          "carpetAreaSqFt": 430,
+          "parking": {
+            "twoWheelerSlots": 1,
+            "fourWheelerSlots": 0
+          },
+          "utilities": {
+            "electricityProvider": "Reliant",
+            "meterNumber": "HOU-EL-77821",
+            "gasLine": "no",
+            "waterSupply": "borewell"
+          },
+          "media": []
         },
         {
           "id": "unit-006",
           "unitCode": "C-302",
           "type": "2BHK",
+          "configuration": "2BHK",
+          "furnishing": "unfurnished",
           "rent": 1320,
           "occupancyStatus": "vacant",
-          "tenantName": ""
+          "tenantName": "",
+          "carpetAreaSqFt": 890,
+          "parking": {
+            "twoWheelerSlots": 1,
+            "fourWheelerSlots": 1
+          },
+          "utilities": {
+            "electricityProvider": "Reliant",
+            "meterNumber": "HOU-EL-77822",
+            "gasLine": "yes",
+            "waterSupply": "mixed"
+          },
+          "media": []
         }
       ]
     }
