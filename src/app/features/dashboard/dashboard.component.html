@@ -1,0 +1,64 @@
+<ng-container *ngIf="data as vm">
+  <r360-page-header [title]="'Good Morning, ' + userName" subtitle="Role-based overview"></r360-page-header>
+
+  <section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-8">Owner View</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+      <r360-card *ngFor="let kpi of vm.ownerKpis" class="block hover:shadow-md transition-shadow">
+        <div class="text-xs uppercase tracking-wide text-gray-500 mb-2">{{ kpi.label }}</div>
+        <div class="text-4xl font-bold text-gray-900 dark:text-gray-100">{{ kpi.value }}</div>
+      </r360-card>
+    </div>
+  </section>
+
+  <section class="mb-8 grid grid-cols-1 xl:grid-cols-5 gap-4">
+    <r360-card class="block xl:col-span-2">
+      <h3 class="text-xl font-semibold mb-8">Payments Overview</h3>
+      <div *ngFor="let row of vm.collectionHealth" class="mb-8 last:mb-0">
+        <div class="flex items-center justify-between mb-2 text-sm">
+          <span>{{ row.label }}</span>
+          <span>{{ row.percent }}%</span>
+        </div>
+        <div class="h-2 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden">
+          <div class="h-full rounded-lg"
+               [ngClass]="[
+                 widthClass(row.percent),
+                 row.tone === 'success' ? 'bg-success' : '',
+                 row.tone === 'info' ? 'bg-secondary' : '',
+                 row.tone === 'warning' ? 'bg-warning' : '',
+                 row.tone === 'danger' ? 'bg-danger' : ''
+               ]"></div>
+        </div>
+      </div>
+    </r360-card>
+
+    <r360-card class="block xl:col-span-3">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-xl font-semibold">Owner Charges</h3>
+        <r360-pagination></r360-pagination>
+      </div>
+      <r360-table>
+        <thead>
+          <tr class="text-left text-sm text-gray-500 border-b border-gray-200 dark:border-gray-700">
+            <th class="px-6 py-4">Amount</th>
+            <th class="px-6 py-4">Property</th>
+            <th class="px-6 py-4">Unit</th>
+            <th class="px-6 py-4">Description</th>
+            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of vm.charges" class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+            <td class="px-6 py-4">{{ c.amount }}</td>
+            <td class="px-6 py-4">{{ c.property }}</td>
+            <td class="px-6 py-4">{{ c.unit }}</td>
+            <td class="px-6 py-4">{{ c.description }}</td>
+            <td class="px-6 py-4"><r360-status-badge [value]="c.status"></r360-status-badge></td>
+            <td class="px-6 py-4"><a class="text-secondary font-semibold" href="#">{{ c.action }}</a></td>
+          </tr>
+        </tbody>
+      </r360-table>
+    </r360-card>
+  </section>
+</ng-container>

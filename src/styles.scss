@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global enterprise styling */
+body {
+  @apply bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100;
+}

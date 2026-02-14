@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/rent360-platform'),
+      dir: require('path').join(__dirname, './coverage/rent360'),
       subdir: '.',
       reporters: [
         { type: 'html' },
