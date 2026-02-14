@@ -60,4 +60,8 @@ export class UserSettingsService {
   updateSettings(settings: Partial<UserSettings>): void {
     this.subject.next({ ...this.subject.value, ...settings });
   }
+
+  reset(): void {
+    this.subject.next(DEFAULT_SETTINGS);
+  }
 }

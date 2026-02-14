@@ -25,7 +25,13 @@ interface MockAuthUser extends AuthUser {
   password: string;
 }
 
+interface StoredSession {
+  user: AuthUser;
+  expiresAt: number;
+}
+
 const SESSION_KEY = 'r360_auth_session';
+const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -86,21 +92,41 @@ export class AuthService {
   }
 
   logout(): Observable<boolean> {
-    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
     this.userSubject.next(null);
     return of(true);
   }
 
   private setSession(user: AuthUser): void {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    const payload: StoredSession = {
+      user,
+      expiresAt: Date.now() + SESSION_TTL_MS,
+    };
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(payload));
     this.userSubject.next(user);
   }
 
   private readSession(): AuthUser | null {
     try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      return raw ? (JSON.parse(raw) as AuthUser) : null;
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      if (!raw) {
+        return null;
+      }
+
+      const parsed = JSON.parse(raw) as StoredSession;
+      if (!parsed?.user || !parsed?.expiresAt) {
+        sessionStorage.removeItem(SESSION_KEY);
+        return null;
+      }
+
+      if (Date.now() > parsed.expiresAt) {
+        sessionStorage.removeItem(SESSION_KEY);
+        return null;
+      }
+
+      return parsed.user;
     } catch {
+      sessionStorage.removeItem(SESSION_KEY);
       return null;
     }
   }

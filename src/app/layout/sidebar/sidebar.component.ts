@@ -132,6 +132,9 @@ export class SidebarComponent {
   }
 
   logout(): void {
-    this.auth.logout().subscribe(() => this.router.navigate(['/login']));
+    this.auth.logout().subscribe(() => {
+      this.settings.reset();
+      this.router.navigate(['/login']);
+    });
   }
 }
