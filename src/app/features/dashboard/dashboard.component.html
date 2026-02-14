@@ -2,14 +2,14 @@
   <div class="r360-page">
     <r360-page-header [title]="'Good Morning, ' + userName" subtitle="Role-based overview"></r360-page-header>
 
-    <section class="r360-section rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+    <section class="r360-section r360-panel">
       <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div class="flex flex-wrap items-center gap-2" *ngIf="availablePersonas.length > 1">
           <button
             *ngFor="let persona of availablePersonas"
             type="button"
-            class="r360-btn-secondary !py-1.5"
-            [ngClass]="selectedPersona === persona ? 'bg-indigo-50 text-primary dark:bg-indigo-500/20 dark:text-indigo-200' : ''"
+            class="r360-chip"
+            [ngClass]="selectedPersona === persona ? 'r360-chip-active' : ''"
             (click)="selectPersona(persona)"
           >
             {{ personaLabel(persona) }}
@@ -47,7 +47,7 @@
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">
         <r360-card *ngFor="let kpi of vm.kpis" class="block transition-shadow hover:shadow-md">
           <div class="mb-2 text-xs uppercase tracking-wide text-gray-500">{{ kpi.label }}</div>
-          <div class="whitespace-nowrap text-2xl font-bold leading-tight lg:text-3xl 2xl:text-4xl text-gray-900 dark:text-gray-100">{{ kpi.value }}</div>
+          <div class="r360-kpi-value">{{ kpi.value }}</div>
         </r360-card>
       </div>
     </section>
@@ -235,7 +235,7 @@
               <td class="r360-td">{{ c.unit }}</td>
               <td class="r360-td">{{ c.description }}</td>
               <td class="r360-td"><r360-status-badge [value]="c.status"></r360-status-badge></td>
-              <td class="r360-td"><a class="font-semibold text-secondary" href="#">{{ c.action }}</a></td>
+              <td class="r360-td"><a class="r360-action-link" href="#">{{ c.action }}</a></td>
             </tr>
           </tbody>
         </r360-table>
@@ -243,6 +243,7 @@
     </section>
   </div>
 </ng-container>
+
 
 
 

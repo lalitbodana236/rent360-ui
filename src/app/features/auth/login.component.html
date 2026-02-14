@@ -1,15 +1,15 @@
 <div class="auth-shell">
   <r360-card>
-    <h2>Sign In</h2>
-    <p class="hint">Use owner@rent360.com / password</p>
+    <h2 class="r360-page-title text-3xl sm:text-4xl">Sign In</h2>
+    <p class="r360-page-subtitle">Use owner@rent360.com / password</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
-      <label>Email<input formControlName="email" type="email" /></label>
-      <label>Password<input formControlName="password" type="password" /></label>
+      <label class="r360-label">Email<input class="r360-input" formControlName="email" type="email" /></label>
+      <label class="r360-label">Password<input class="r360-input" formControlName="password" type="password" /></label>
       <div class="error" *ngIf="error">{{ error }}</div>
-      <button class="btn" type="submit">Login</button>
+      <button class="r360-btn-primary w-full" type="submit">Login</button>
     </form>
 
-    <p class="hint">New user? <a routerLink="/login/register">Create account</a></p>
+    <p class="r360-page-subtitle">New user? <a class="r360-action-link" routerLink="/login/register">Create account</a></p>
   </r360-card>
 </div>

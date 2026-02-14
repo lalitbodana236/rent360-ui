@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html,
+  body {
+    @apply h-full;
+  }
+
   body {
     @apply bg-gray-100 text-gray-800 antialiased dark:bg-gray-900 dark:text-gray-100;
   }
@@ -16,6 +21,18 @@
 }
 
 @layer components {
+  .r360-shell {
+    @apply flex h-screen min-h-0 flex-col overflow-hidden bg-gray-100 dark:bg-gray-900;
+  }
+
+  .r360-shell-main {
+    @apply flex min-h-0 flex-1;
+  }
+
+  .r360-main-content {
+    @apply min-w-0 flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6;
+  }
+
   .r360-page {
     @apply space-y-6;
   }
@@ -29,7 +46,7 @@
   }
 
   .r360-page-title {
-    @apply text-4xl font-bold leading-tight text-gray-900 dark:text-gray-100;
+    @apply text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-4xl;
   }
 
   .r360-page-subtitle {
@@ -37,19 +54,75 @@
   }
 
   .r360-card {
-    @apply rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800;
+    @apply rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6;
   }
 
   .r360-btn-primary {
-    @apply rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:shadow-md;
+    @apply inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .r360-btn-secondary {
-    @apply rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800;
+    @apply inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .r360-action-link {
+    @apply text-sm font-semibold text-primary hover:text-blue-700 dark:text-secondary dark:hover:text-sky-300;
   }
 
   .r360-input {
-    @apply w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-800 outline-none transition focus:border-secondary dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100;
+    @apply w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-800 outline-none transition-colors focus:border-secondary dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100;
+  }
+
+  .r360-label {
+    @apply text-xs font-medium text-gray-500 dark:text-gray-300;
+  }
+
+  .r360-chip {
+    @apply rounded-lg border border-gray-300 bg-white px-4 py-1.5 text-sm font-semibold text-gray-700 transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200;
+  }
+
+  .r360-chip-active {
+    @apply border-blue-200 bg-indigo-50 text-primary dark:border-indigo-500/40 dark:bg-indigo-500/20 dark:text-indigo-200;
+  }
+
+  .r360-icon-btn {
+    @apply inline-grid h-9 w-9 place-items-center rounded-lg border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-700 sm:h-10 sm:w-10;
+  }
+
+  .r360-icon-btn-circle {
+    @apply rounded-full;
+  }
+
+  .r360-panel {
+    @apply rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800;
+  }
+
+  .r360-nav-link {
+    @apply relative flex items-center rounded-lg px-3 py-3 text-sm font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800;
+  }
+
+  .r360-nav-link-active {
+    @apply bg-indigo-50 text-primary dark:bg-indigo-500/20 dark:text-indigo-200;
+  }
+
+  .r360-subnav-link {
+    @apply block rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800;
+  }
+
+  .r360-subnav-link-active {
+    @apply bg-indigo-50 text-primary dark:bg-indigo-500/20 dark:text-indigo-200;
+  }
+
+  .r360-menu {
+    @apply absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900;
+  }
+
+  .r360-menu-item {
+    @apply block w-full px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800;
+  }
+
+  .r360-kpi-value {
+    @apply break-words text-2xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-3xl xl:text-4xl;
   }
 
   .r360-table-wrap {
@@ -57,18 +130,19 @@
   }
 
   .r360-table {
-    @apply min-w-full;
+    @apply min-w-[960px] w-full;
   }
 
   .r360-th {
-    @apply px-6 py-4 text-left text-sm font-medium text-gray-500;
+    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 sm:px-6 sm:py-4;
   }
 
   .r360-td {
-    @apply px-6 py-4 text-sm text-gray-800 dark:text-gray-100;
+    @apply px-4 py-3 text-sm text-gray-800 dark:text-gray-100 sm:px-6 sm:py-4;
   }
 
   .r360-row {
     @apply border-b border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800;
   }
 }
+
