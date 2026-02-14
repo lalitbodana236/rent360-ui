@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 import { UserSettingsService } from '../../core/services/user-settings.service';
 
@@ -21,13 +22,12 @@ export class LoginComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly auth: AuthService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
     private readonly settings: UserSettingsService,
   ) {}
 
   ngOnInit(): void {
     if (this.auth.snapshotUser) {
-      this.router.navigateByUrl('/dashboard', { replaceUrl: true });
+      this.router.navigate(['/dashboard'], { replaceUrl: true });
     }
   }
 
@@ -40,26 +40,28 @@ export class LoginComponent implements OnInit {
     const email = String(this.form.value.email ?? '');
     const password = String(this.form.value.password ?? '');
 
-    this.auth.login(email, password).subscribe({
-      next: (user) => {
-        this.settings.updateSettings({
-          fullName: user.fullName,
-          email: user.email,
-          mobileNumber: user.mobileNumber,
-          address: user.address,
-          currency: user.currency,
-        });
+    this.auth
+      .login(email, password)
+      .pipe(
+        switchMap((user) => {
+          this.settings.updateSettings({
+            fullName: user.fullName,
+            email: user.email,
+            mobileNumber: user.mobileNumber,
+            address: user.address,
+            currency: user.currency,
+          });
 
-        const requested = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
-        const returnUrl = requested.startsWith('/login') ? '/dashboard' : requested;
-
-        this.router.navigateByUrl(returnUrl, { replaceUrl: true }).catch(() => {
-          window.location.href = returnUrl;
-        });
-      },
-      error: (err: Error) => {
-        this.error = err.message || 'Login failed';
-      },
-    });
+          return this.settings.loadForUser(user.email);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard'], { replaceUrl: true });
+        },
+        error: (err: Error) => {
+          this.error = err.message || 'Login failed';
+        },
+      });
   }
 }

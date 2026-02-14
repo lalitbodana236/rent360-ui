@@ -1,0 +1,20 @@
+{
+  "role": "tenant",
+  "kpis": [
+    { "label": "Current Rent", "value": "$1,250.00" },
+    { "label": "Maintenance Due", "value": "$85.00" },
+    { "label": "Outstanding Dues", "value": "$250.00" },
+    { "label": "Open Requests", "value": "2" }
+  ],
+  "collectionHealth": [
+    { "label": "Paid", "percent": 78, "tone": "success" },
+    { "label": "On-time", "percent": 82, "tone": "info" },
+    { "label": "Late", "percent": 18, "tone": "warning" },
+    { "label": "Due", "percent": 22, "tone": "danger" }
+  ],
+  "charges": [
+    { "amount": "$1,250.00", "property": "Building 2", "unit": "102", "description": "Monthly rent", "status": "Due", "action": "Pay now" },
+    { "amount": "$250.00", "property": "Building 2", "unit": "102", "description": "Late fee", "status": "Late", "action": "View" },
+    { "amount": "$85.00", "property": "Building 2", "unit": "102", "description": "Maintenance", "status": "Paid", "action": "View" }
+  ]
+}

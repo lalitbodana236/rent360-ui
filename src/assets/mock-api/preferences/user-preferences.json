@@ -1,0 +1,28 @@
+{
+  "preferences": [
+    {
+      "fullName": "Olivia Owner",
+      "email": "owner@rent360.com",
+      "mobileNumber": "+1 555-1001",
+      "address": "10 Owner Street",
+      "currency": "USD",
+      "defaultDashboard": "owner"
+    },
+    {
+      "fullName": "Terry Tenant",
+      "email": "tenant@rent360.com",
+      "mobileNumber": "+1 555-2002",
+      "address": "21 Tenant Avenue",
+      "currency": "USD",
+      "defaultDashboard": "tenant"
+    },
+    {
+      "fullName": "Casey Hybrid",
+      "email": "hybrid@rent360.com",
+      "mobileNumber": "+1 555-3003",
+      "address": "33 Hybrid Blvd",
+      "currency": "USD",
+      "defaultDashboard": "owner"
+    }
+  ]
+}

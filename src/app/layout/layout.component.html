@@ -1,8 +1,8 @@
-<div class="h-screen overflow-hidden flex flex-col">
+<div class="h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
   <app-header (toggleCollapse)="toggleCollapse()"></app-header>
-  <div class="flex flex-1 min-h-0">
+  <div class="flex h-[calc(100vh-65px)] min-h-0">
     <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-    <main class="flex-1 overflow-y-auto px-6 pb-8">
+    <main class="flex-1 overflow-y-auto p-6">
       <router-outlet></router-outlet>
     </main>
   </div>

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { ApiClientService } from './api-client.service';
 
 export type UserRole =
   | 'owner'
@@ -33,7 +32,7 @@ export class AuthService {
   private readonly userSubject = new BehaviorSubject<AuthUser | null>(this.readSession());
   readonly currentUser$ = this.userSubject.asObservable();
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly apiClient: ApiClientService) {}
 
   get snapshotUser(): AuthUser | null {
     return this.userSubject.value;
@@ -55,25 +54,26 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<AuthUser> {
-    if (!environment.api.useMockApi) {
-      return throwError(() => new Error('Real API login not configured yet'));
-    }
+    return this.apiClient
+      .get<{ users: MockAuthUser[] }>({
+        endpoint: 'auth/users',
+        mockPath: 'auth/users.json',
+      })
+      .pipe(
+        map((res) => {
+          const user = res.users.find(
+            (entry) => entry.email.toLowerCase() === email.toLowerCase() && entry.password === password,
+          );
 
-    return this.http.get<{ users: MockAuthUser[] }>('assets/mock-api/auth/users.json').pipe(
-      map((res) => {
-        const user = res.users.find(
-          (entry) => entry.email.toLowerCase() === email.toLowerCase() && entry.password === password,
-        );
+          if (!user) {
+            throw new Error('Invalid email or password');
+          }
 
-        if (!user) {
-          throw new Error('Invalid email or password');
-        }
-
-        const { password: _, ...safeUser } = user;
-        this.setSession(safeUser);
-        return safeUser;
-      }),
-    );
+          const { password: _, ...safeUser } = user;
+          this.setSession(safeUser);
+          return safeUser;
+        }),
+      );
   }
 
   register(payload: Omit<MockAuthUser, 'id'>): Observable<AuthUser> {
