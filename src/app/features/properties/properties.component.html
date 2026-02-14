@@ -284,11 +284,29 @@
               <td class="r360-td">{{ row.unit?.media?.length || 0 }}</td>
               <td class="r360-td"><r360-status-badge [value]="row.unit?.occupancyStatus || row.propertyStatus"></r360-status-badge></td>
               <td class="r360-td">
-                <div class="flex flex-wrap gap-2">
-                  <button class="r360-btn-secondary !py-1.5" type="button" (click)="viewRowDetails(row)">View</button>
-                  <button class="r360-btn-secondary !py-1.5" type="button" *ngIf="canEdit" (click)="editPropertyFromRow(row.propertyId)">Edit Property</button>
-                  <button class="r360-btn-secondary !py-1.5" type="button" *ngIf="canEdit && row.unit" (click)="openEditUnit(row)">Edit Unit</button>
-                  <button class="r360-btn-secondary !py-1.5" type="button" *ngIf="canEdit && !row.unit" (click)="openCreateUnit(row.propertyId)">Add Unit</button>
+                <div class="relative inline-block text-left" (click)="$event.stopPropagation()">
+                  <button
+                    type="button"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+                    (click)="toggleActionMenu($event, row)"
+                    aria-label="More actions"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+                      <circle cx="12" cy="5" r="1.8"></circle>
+                      <circle cx="12" cy="12" r="1.8"></circle>
+                      <circle cx="12" cy="19" r="1.8"></circle>
+                    </svg>
+                  </button>
+
+                  <div
+                    *ngIf="isActionMenuOpen(row)"
+                    class="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900"
+                  >
+                    <button class="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800" type="button" (click)="viewRowDetails(row)">View</button>
+                    <button class="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800" type="button" *ngIf="canEdit" (click)="editPropertyFromRow(row.propertyId)">Edit Property</button>
+                    <button class="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800" type="button" *ngIf="canEdit && row.unit" (click)="openEditUnit(row)">Edit Unit</button>
+                    <button class="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800" type="button" *ngIf="canEdit && !row.unit" (click)="openCreateUnit(row.propertyId)">Add Unit</button>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -298,3 +316,4 @@
     </r360-card>
   </section>
 </div>
+

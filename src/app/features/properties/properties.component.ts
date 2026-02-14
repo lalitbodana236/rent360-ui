@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import {
@@ -46,6 +46,7 @@ export class PropertiesComponent implements OnInit {
   editingUnitId = '';
   selectedRow: UnitTableRow | null = null;
   formSubmitting = false;
+  openActionMenuId: string | null = null;
 
   readonly bhkOptions: BHKType[] = ['studio', '1BHK', '2BHK', '3BHK', '4BHK', '5BHK+'];
   readonly furnishingOptions: FurnishingType[] = ['unfurnished', 'semi-furnished', 'furnished'];
@@ -134,6 +135,28 @@ export class PropertiesComponent implements OnInit {
     this.applyFilters();
   }
 
+  rowMenuId(row: UnitTableRow): string {
+    return `${row.propertyId}-${row.unit?.id ?? 'no-unit'}`;
+  }
+
+  toggleActionMenu(event: MouseEvent, row: UnitTableRow): void {
+    event.stopPropagation();
+    const key = this.rowMenuId(row);
+    this.openActionMenuId = this.openActionMenuId === key ? null : key;
+  }
+
+  isActionMenuOpen(row: UnitTableRow): boolean {
+    return this.openActionMenuId === this.rowMenuId(row);
+  }
+
+  closeActionMenu(): void {
+    this.openActionMenuId = null;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.closeActionMenu();
+  }
   openCreateProperty(): void {
     this.editPropertyMode = false;
     this.editingPropertyId = '';
@@ -392,4 +415,5 @@ export class PropertiesComponent implements OnInit {
       });
   }
 }
+
 
