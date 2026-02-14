@@ -6,6 +6,14 @@
   </r360-card>
 </section>
 
+<section class="r360-section" *ngIf="!permissionOverridesEnabled">
+  <r360-card>
+    <div class="text-sm text-gray-600 dark:text-gray-300">
+      Client-side permission overrides are disabled in environment configuration. Permissions are expected from backend APIs.
+    </div>
+  </r360-card>
+</section>
+
 <section class="r360-section" *ngIf="loading">
   <r360-card>Loading permission manager...</r360-card>
 </section>
@@ -16,7 +24,7 @@
   </r360-card>
 </section>
 
-<section class="r360-section" *ngIf="!loading && !error && !canManageAuthorization">
+<section class="r360-section" *ngIf="permissionOverridesEnabled && !loading && !error && !canManageAuthorization">
   <r360-card>
     <div class="text-sm text-gray-600 dark:text-gray-300">
       You can view settings, but only users with authorization management permission can change access rules.
@@ -24,7 +32,7 @@
   </r360-card>
 </section>
 
-<section class="r360-section" *ngIf="!loading && !error && canManageAuthorization">
+<section class="r360-section" *ngIf="permissionOverridesEnabled && !loading && !error && canManageAuthorization">
   <r360-card>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <label class="r360-label">

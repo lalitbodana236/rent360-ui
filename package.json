@@ -9,7 +9,7 @@
         "test": "ng test",
         "deploy:gh": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-github-pages.ps1",
         "deploy:gh:prod": "npm run deploy:gh",
-        "build:ghpages": "ng build --configuration production --base-href /rent360/"
+        "build:ghpages": "ng build --configuration ghpages --base-href /rent360/"
     },
     "private": true,
     "dependencies": {

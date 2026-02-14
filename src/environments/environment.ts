@@ -8,6 +8,10 @@ export const environment = {
     apiBaseUrl: 'http://localhost:3000/api',
     mockApiBaseUrl: 'assets/mock-api',
   },
+  accessControl: {
+    enableClientRoleManagement: true,
+    enableClientPermissionOverrides: true,
+  },
   appFeatures: {
     enableMarketplace: true,
     enableSocietyModule: true,

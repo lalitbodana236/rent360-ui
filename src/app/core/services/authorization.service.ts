@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import {
   AUTHORIZATION_CONFIG,
   AuthorizationConfig,
@@ -73,6 +74,9 @@ export class AuthorizationService {
   }
 
   getUserOverride(email: string, permission: string): PermissionAccess | null {
+    if (!this.isClientPermissionOverridesEnabled()) {
+      return null;
+    }
     return this.overridesSubject.value[email]?.[permission] ?? null;
   }
 
@@ -100,6 +104,9 @@ export class AuthorizationService {
     permission: string,
     level: PermissionAccess | null,
   ): void {
+    if (!this.isClientPermissionOverridesEnabled()) {
+      return;
+    }
     const current = { ...this.overridesSubject.value };
     const existing = { ...(current[email] ?? {}) };
 
@@ -119,9 +126,16 @@ export class AuthorizationService {
   }
 
   clearUserOverrides(email: string): void {
+    if (!this.isClientPermissionOverridesEnabled()) {
+      return;
+    }
     const current = { ...this.overridesSubject.value };
     delete current[email];
     this.persistOverrides(current);
+  }
+
+  isClientPermissionOverridesEnabled(): boolean {
+    return environment.accessControl.enableClientPermissionOverrides;
   }
 
   private isFeatureEnabled(permission: string): boolean {
@@ -141,6 +155,9 @@ export class AuthorizationService {
 
   private readOverridesFromStore(): Record<string, PermissionMap> {
     const fromConfig = this.config.userOverrides ?? {};
+    if (!this.isClientPermissionOverridesEnabled()) {
+      return { ...fromConfig };
+    }
 
     try {
       const raw = localStorage.getItem(this.overrideStoreKey);
@@ -159,6 +176,9 @@ export class AuthorizationService {
 
   private persistOverrides(value: Record<string, PermissionMap>): void {
     this.overridesSubject.next(value);
+    if (!this.isClientPermissionOverridesEnabled()) {
+      return;
+    }
     try {
       localStorage.setItem(this.overrideStoreKey, JSON.stringify(value));
     } catch {

@@ -1,16 +1,16 @@
 export const environment = {
-  production: false,
+  production: true,
   branding: {
     appName: 'Rent360',
   },
   api: {
-    useMockApi: true,
-    apiBaseUrl: 'http://localhost:3000/api',
+    useMockApi: false,
+    apiBaseUrl: 'https://api.example.com',
     mockApiBaseUrl: 'assets/mock-api',
   },
   accessControl: {
-    enableClientRoleManagement: true,
-    enableClientPermissionOverrides: true,
+    enableClientRoleManagement: false,
+    enableClientPermissionOverrides: false,
   },
   appFeatures: {
     enableMarketplace: true,

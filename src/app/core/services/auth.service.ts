@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { ApiClientService } from './api-client.service';
 
 export type UserRole =
@@ -148,16 +149,26 @@ export class AuthService {
       );
   }
 
+  isClientRoleManagementEnabled(): boolean {
+    return environment.accessControl.enableClientRoleManagement;
+  }
+
   availableRoles(): UserRole[] {
     return [...AVAILABLE_ROLES];
   }
 
   getUserRoleOverride(email: string): UserRole[] | null {
+    if (!this.isClientRoleManagementEnabled()) {
+      return null;
+    }
     const overrides = this.readRoleOverrides();
     return overrides[email] ?? null;
   }
 
   setUserRoles(email: string, roles: UserRole[]): void {
+    if (!this.isClientRoleManagementEnabled()) {
+      return;
+    }
     const normalized = this.normalizeRoles(roles);
     const overrides = this.readRoleOverrides();
     overrides[email] = normalized;
@@ -166,6 +177,9 @@ export class AuthService {
   }
 
   clearUserRoleOverride(email: string): void {
+    if (!this.isClientRoleManagementEnabled()) {
+      return;
+    }
     const overrides = this.readRoleOverrides();
     delete overrides[email];
     this.persistRoleOverrides(overrides);
@@ -187,6 +201,9 @@ export class AuthService {
   }
 
   private applyRoleOverride(user: AuthUser): AuthUser {
+    if (!this.isClientRoleManagementEnabled()) {
+      return user;
+    }
     const override = this.getUserRoleOverride(user.email);
     if (!override?.length) {
       return user;
@@ -195,6 +212,9 @@ export class AuthService {
   }
 
   private readRoleOverrides(): Record<string, UserRole[]> {
+    if (!this.isClientRoleManagementEnabled()) {
+      return {};
+    }
     try {
       const raw = localStorage.getItem(ROLE_OVERRIDES_KEY);
       if (!raw) {
@@ -211,6 +231,9 @@ export class AuthService {
   }
 
   private persistRoleOverrides(value: Record<string, UserRole[]>): void {
+    if (!this.isClientRoleManagementEnabled()) {
+      return;
+    }
     try {
       localStorage.setItem(ROLE_OVERRIDES_KEY, JSON.stringify(value));
     } catch {

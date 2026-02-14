@@ -60,7 +60,7 @@ if (-not (Test-Path 'node_modules')) {
 }
 
 Write-Host '[deploy] Building production bundle...'
-cmd /c "npm run build -- --configuration production --base-href $baseHref"
+cmd /c "npm run build -- --configuration ghpages --base-href $baseHref"
 
 $distPath = Join-Path 'dist' $ProjectName
 if (-not (Test-Path $distPath)) {

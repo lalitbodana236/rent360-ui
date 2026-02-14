@@ -33,6 +33,7 @@ export class SettingsRolesComponent implements OnInit {
   canManageAuthorization = false;
   loading = true;
   error = '';
+  roleManagementEnabled = true;
 
   constructor(
     private readonly auth: AuthService,
@@ -40,6 +41,12 @@ export class SettingsRolesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.roleManagementEnabled = this.auth.isClientRoleManagementEnabled();
+    if (!this.roleManagementEnabled) {
+      this.loading = false;
+      return;
+    }
+
     this.canManageAuthorization = this.authorization.canWrite(
       PERMISSIONS.authorizationManage,
     );

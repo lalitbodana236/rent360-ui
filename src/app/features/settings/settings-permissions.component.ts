@@ -31,6 +31,7 @@ export class SettingsPermissionsComponent implements OnInit {
   loading = true;
   error = '';
   permissionRows: PermissionRow[] = [];
+  permissionOverridesEnabled = true;
 
   constructor(
     private readonly auth: AuthService,
@@ -51,6 +52,13 @@ export class SettingsPermissionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionOverridesEnabled =
+      this.authorization.isClientPermissionOverridesEnabled();
+    if (!this.permissionOverridesEnabled) {
+      this.loading = false;
+      return;
+    }
+
     this.canManageAuthorization = this.authorization.canWrite(
       PERMISSIONS.authorizationManage,
     );
