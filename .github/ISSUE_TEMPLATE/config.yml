@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Product Backlog
+    url: https://github.com/lalitbodana236/rent360-ui/blob/master/docs/master-product-detailed-backlog.md
+    about: Refer to the detailed backlog before creating issues

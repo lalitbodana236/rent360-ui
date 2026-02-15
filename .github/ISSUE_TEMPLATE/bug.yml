@@ -1,0 +1,69 @@
+name: Bug
+about: Report a bug with reproducible details and impact
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: input
+    id: module
+    attributes:
+      label: Module
+      placeholder: Payments / Properties / Dashboard ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      placeholder: Short problem statement
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Browser, device, build version, API mode
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      placeholder: Attach screenshots, console logs, network traces

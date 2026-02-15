@@ -1,0 +1,113 @@
+name: Story
+about: Create an implementation story linked to a sprint backlog item
+title: "[MODULE-###] "
+labels: ["story"]
+body:
+  - type: input
+    id: story_id
+    attributes:
+      label: Story ID
+      description: Example: PAY-001, COMM-201
+      placeholder: MODULE-###
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options:
+        - Core
+        - Auth
+        - Dashboard
+        - Properties
+        - Tenants
+        - Payments
+        - Society
+        - Marketplace
+        - Communications
+        - Reports
+        - Settings
+        - Ops
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User Story
+      description: As a <role>, I want <capability>, so that <business value>
+      placeholder: As a..., I want..., so that...
+    validations:
+      required: true
+
+  - type: textarea
+    id: preconditions
+    attributes:
+      label: Preconditions
+      description: Required setup/data/environment assumptions
+      placeholder: |
+        1. User has role ...
+        2. Feature flag ... is enabled
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Use clear Given/When/Then or numbered conditions
+      placeholder: |
+        1. Given ... when ... then ...
+        2. Given ... when ... then ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: fe_tasks
+    attributes:
+      label: Frontend Tasks (File-level)
+      placeholder: |
+        1. src/app/.../file.ts - change details
+        2. src/app/.../file.html - change details
+
+  - type: textarea
+    id: be_tasks
+    attributes:
+      label: Backend Tasks (File-level)
+      placeholder: |
+        1. backend/src/.../file.ts - change details
+        2. backend/db/migrations/... - schema changes
+
+  - type: textarea
+    id: qa_tests
+    attributes:
+      label: QA Test Scenarios
+      placeholder: |
+        1. Positive path ...
+        2. Negative path ...
+        3. Permission path ...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: definition_of_done
+    attributes:
+      label: Definition of Done
+      options:
+        - label: Acceptance criteria met
+        - label: FE implementation complete
+        - label: BE implementation complete
+        - label: Unit/integration tests added or updated
+        - label: QA scenarios executed
+        - label: Docs/config updated if needed
+
+  - type: input
+    id: sprint
+    attributes:
+      label: Sprint
+      placeholder: Sprint 1
+
+  - type: input
+    id: estimate
+    attributes:
+      label: Story Points
+      placeholder: 3/5/8/13
