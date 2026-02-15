@@ -16,16 +16,17 @@ function Require-Gh {
 }
 
 function Ensure-Auth {
-  $status = gh auth status 2>$null
+  $status = gh auth status --hostname github.com 2>$null
   if ($LASTEXITCODE -ne 0) {
     throw 'gh is not authenticated. Run: gh auth login'
   }
-  gh auth refresh -s project 1>$null
+  # Do not force scope refresh in non-interactive mode; user may have already granted it.
 }
 
 function Ensure-Label {
   param([string]$Name, [string]$Color = '1f6feb')
-  $existing = gh label list --repo "$Owner/$Repo" --limit 200 --json name --jq ".[] | select(.name==\"$Name\") | .name"
+  $labels = gh label list --repo "$Owner/$Repo" --limit 200 --json name | ConvertFrom-Json
+  $existing = $labels | Where-Object { $_.name -eq $Name } | Select-Object -First 1
   if (-not $existing) {
     if ($DryRun) {
       Write-Host "[DRY-RUN] Create label: $Name"
@@ -63,7 +64,8 @@ function Get-ProjectNumber {
 
 function Issue-Exists {
   param([string]$Title)
-  $found = gh issue list --repo "$Owner/$Repo" --state all --limit 500 --search "\"$Title\" in:title" --json title --jq ".[] | select(.title==\"$Title\") | .title"
+  $issues = gh issue list --repo "$Owner/$Repo" --state all --limit 500 --search "\"$Title\" in:title" --json title | ConvertFrom-Json
+  $found = $issues | Where-Object { $_.title -eq $Title } | Select-Object -First 1
   return [bool]$found
 }
 

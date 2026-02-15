@@ -16,7 +16,7 @@ winget install GitHub.cli
 2. Authenticate:
 ```powershell
 gh auth login
-gh auth refresh -s project
+gh auth refresh --hostname github.com -s project
 ```
 
 ## Dry Run
