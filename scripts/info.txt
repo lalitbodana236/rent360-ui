@@ -24,3 +24,98 @@ society-vendor@rent360.com (societyAdmin, vendor)
 security-vendor@rent360.com (security, vendor)
 allroles@rent360.com (owner, tenant, societyAdmin, security, vendor, publicUser)
 /****USER INFO*****/
+
+
+identity-access-service for auth (login, JWT, refresh)
+user-service for user profile/data
+authorization-policy-service for roles/permissions/overrides
+
+Example structure:
+
+backend/api-gateway
+backend/identity-access-service
+backend/user-service
+backend/authorization-policy-service
+backend/tenant-management-service
+Frontend (rent360 Angular) should call only gateway base URL:
+
+Dev: http://localhost:8080/api
+Gateway routes internally to downstream services.
+
+
+Use this starter dependency split for a Spring Boot microservices setup.
+
+api-gateway
+spring-cloud-starter-gateway
+spring-boot-starter-security
+spring-boot-starter-oauth2-resource-server
+spring-boot-starter-actuator
+spring-cloud-starter-config (if using Config Server)
+spring-cloud-starter-netflix-eureka-client (if using Eureka)
+identity-access-service
+spring-boot-starter-web
+spring-boot-starter-security
+spring-boot-starter-oauth2-authorization-server (or JWT custom impl)
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-validation
+spring-boot-starter-actuator
+jjwt (if not using auth-server starter)
+user-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-validation
+spring-boot-starter-security (resource server/JWT validation)
+spring-boot-starter-actuator
+springdoc-openapi-starter-webmvc-ui
+authorization-policy-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-security
+spring-boot-starter-cache
+spring-boot-starter-actuator
+tenant-management-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-validation
+spring-boot-starter-security
+spring-boot-starter-actuator
+property-unit-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-validation
+spring-boot-starter-security
+spring-boot-starter-actuator
+payment-billing-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-validation
+spring-boot-starter-security
+spring-boot-starter-actuator
+spring-kafka (or spring-boot-starter-amqp) for async events
+task-workflow-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-security
+spring-kafka (or AMQP)
+spring-boot-starter-actuator
+communication-service
+spring-boot-starter-web
+spring-boot-starter-data-jpa
+postgresql
+spring-boot-starter-mail
+twilio SDK (if WhatsApp/SMS)
+spring-kafka (or AMQP)
+spring-boot-starter-actuator
+Shared/infra services
+service-registry: spring-cloud-starter-netflix-eureka-server
+config-server: spring-cloud-config-server
+observability (in each service):
+micrometer-tracing-bridge-brave
+zipkin-reporter-brave (optional)
