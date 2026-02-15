@@ -1,7 +1,8 @@
 .reports-enter > * {
   opacity: 0;
   transform: translateY(10px);
-  animation: reports-reveal 0.45s ease-out forwards;
+  animation: reports-reveal 0.24s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 .reports-enter > *:nth-child(1) {
@@ -33,7 +34,7 @@
     transparent
   );
   pointer-events: none;
-  animation: reports-sheen 5.8s ease-in-out infinite;
+  animation: reports-sheen 1.1s ease-out 1;
 }
 
 .reports-caption {
@@ -71,7 +72,7 @@
 
 .reports-ring-progress {
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.8s ease;
+  transition: stroke-dashoffset 0.36s ease;
 }
 
 .reports-ring-center {
@@ -117,7 +118,7 @@
 
 .reports-area {
   opacity: 0.14;
-  animation: reports-rise 0.7s ease-out both;
+  animation: reports-rise 0.28s ease-out both;
 }
 
 .reports-line {
@@ -125,7 +126,8 @@
   stroke-width: 2.8;
   stroke-linecap: round;
   stroke-linejoin: round;
-  animation: reports-draw 1.1s ease-out both;
+  animation: reports-fade-in 0.24s ease-out both;
+  will-change: opacity, transform;
 }
 
 .reports-line-legend {
@@ -186,7 +188,8 @@
 .reports-bar-fill {
   width: 100%;
   border-radius: 999px;
-  animation: reports-rise 0.6s ease-out both;
+  animation: reports-rise 0.26s ease-out both;
+  will-change: transform, opacity;
 }
 
 .reports-bar-label {
@@ -199,7 +202,6 @@
   .reports-enter > *,
   .reports-caption-card::after,
   .reports-area,
-  .reports-line,
   .reports-bar-fill {
     animation: none !important;
     transform: none !important;
@@ -207,23 +209,54 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .reports-plot-card {
+    min-height: 240px;
+  }
+
+  .reports-bars {
+    height: 170px;
+  }
+
+  .reports-bar-track {
+    height: 132px;
+    max-width: 38px;
+  }
+}
+
+@media (max-width: 640px) {
+  .reports-caption {
+    font-size: 1rem;
+  }
+
+  .reports-plot-card {
+    min-height: 210px;
+  }
+
+  .reports-line-labels {
+    font-size: 0.66rem;
+  }
+
+  .reports-bars {
+    height: 150px;
+    gap: 0.5rem;
+  }
+
+  .reports-bar-track {
+    height: 116px;
+    max-width: 32px;
+  }
+
+  .reports-ring-wrap {
+    width: 106px;
+    height: 106px;
+  }
+}
+
 @keyframes reports-reveal {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes reports-draw {
-  from {
-    opacity: 0.5;
-    stroke-dasharray: 500;
-    stroke-dashoffset: 500;
-  }
-  to {
-    opacity: 1;
-    stroke-dasharray: 500;
-    stroke-dashoffset: 0;
   }
 }
 
@@ -237,6 +270,17 @@
     transform: scaleY(1);
     transform-origin: bottom;
     opacity: 1;
+  }
+}
+
+@keyframes reports-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
